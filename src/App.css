@@ -1,0 +1,109 @@
+/* src/App.css */
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #ff8c00; /* Turuncu */
+  color: white;
+  padding: 10px 20px;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.navbar li {
+  margin: 0 15px;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.navbar a:hover {
+  color: #ffe0b2; /* Açık turuncu tonu */
+}
+
+/* Aktif navbar bağlantısı için stil */
+.navbar a.active {
+  border-bottom: 2px solid #ffe0b2;
+}
+
+/* Bölümler */
+.section {
+  padding: 100px 20px 80px; /* Üstte navbar için ekstra boşluk */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.section h2 {
+  color: #ff8c00;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.section p {
+  max-width: 600px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Home Section için logo stili */
+.home-logo {
+  max-width: 200px;
+  margin-bottom: 20px;
+}
+
+/* İletişim Bilgileri Stil Ayarları */
+.contact-info {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.contact-icon {
+  font-size: 1.5rem;
+  color: #ff8c00;
+}
+
+/* Responsive ayarlar */
+@media screen and (max-width: 600px) {
+  .navbar ul {
+    flex-direction: column;
+  }
+  
+  .navbar li {
+    margin: 5px 0;
+  }
+  
+  .section h2 {
+    font-size: 2rem;
+  }
+}
+
