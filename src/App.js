@@ -1,49 +1,66 @@
-// src/App.js
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { FaPhone, FaEnvelope, FaClock } from "react-icons/fa";
+import ProductModal from "./ProductModal";
 
-// Navbar bileşeni: aktif bölüm bilgisi prop olarak alınır
+// Örnek ürün verileri: Her kategori için ürünler
+const productsData = {
+  kategori1: [
+    {
+      id: 1,
+      name: "Kalsiyum",
+      image: "/calcium.jpg",
+      description: "Kalsiyum."
+    },
+    {
+      id: 2,
+      name: "Ürün 2",
+      image: "https://via.placeholder.com/150",
+      description: "Ürün 2 açıklaması."
+    }
+  ],
+  kategori2: [
+    {
+      id: 3,
+      name: "Ürün 3",
+      image: "https://via.placeholder.com/150",
+      description: "Ürün 3 açıklaması."
+    },
+    {
+      id: 4,
+      name: "Ürün 4",
+      image: "https://via.placeholder.com/150",
+      description: "Ürün 4 açıklaması."
+    }
+  ]
+};
+
+// Navbar: Aktif bölüm bilgisine göre linke "active" sınıfı ekliyoruz
 const Navbar = ({ activeSection }) => (
   <nav className="navbar">
     <ul>
       <li>
-        <a
-          href="#home"
-          className={activeSection === "home" ? "active" : ""}
-        >
+        <a href="#home" className={activeSection === "home" ? "active" : ""}>
           Ana Sayfa
         </a>
       </li>
       <li>
-        <a
-          href="#about"
-          className={activeSection === "about" ? "active" : ""}
-        >
+        <a href="#about" className={activeSection === "about" ? "active" : ""}>
           Hakkımızda
         </a>
       </li>
       <li>
-        <a
-          href="#products"
-          className={activeSection === "products" ? "active" : ""}
-        >
+        <a href="#products" className={activeSection === "products" ? "active" : ""}>
           Ürünler
         </a>
       </li>
       <li>
-        <a
-          href="#offer"
-          className={activeSection === "offer" ? "active" : ""}
-        >
+        <a href="#offer" className={activeSection === "offer" ? "active" : ""}>
           Teklif Al
         </a>
       </li>
       <li>
-        <a
-          href="#contact"
-          className={activeSection === "contact" ? "active" : ""}
-        >
+        <a href="#contact" className={activeSection === "contact" ? "active" : ""}>
           İletişim
         </a>
       </li>
@@ -51,7 +68,7 @@ const Navbar = ({ activeSection }) => (
   </nav>
 );
 
-// Ana Sayfa Bölümü: Logonuzun yer aldığı bölüm
+// Ana Sayfa Bölümü (Logonuzu içerir)
 const HomeSection = () => (
   <section id="home" className="section">
     <img src="/logo.png" alt="Firma Logosu" className="home-logo" />
@@ -68,7 +85,64 @@ const Section = ({ id, title, children }) => (
   </section>
 );
 
-// İletişim bilgileri bileşeni: modern ikonlar kullanılıyor
+// Ürünler Bölümü: Tab yapısı ve ürün modalı içerir
+const ProductsSection = () => {
+  const [activeTab, setActiveTab] = useState("kategori1");
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+  };
+
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+  };
+
+  const closeModal = () => {
+    setSelectedProduct(null);
+  };
+
+  return (
+    <section id="products" className="section">
+      <h2>Ürünler</h2>
+      <div className="tabs">
+        <button
+          className={`tab-button ${activeTab === "kategori1" ? "active" : ""}`}
+          onClick={() => handleTabClick("kategori1")}
+        >
+          Kategori 1
+        </button>
+        <button
+          className={`tab-button ${activeTab === "kategori2" ? "active" : ""}`}
+          onClick={() => handleTabClick("kategori2")}
+        >
+          Kategori 2
+        </button>
+      </div>
+      <div className="products-grid">
+        {productsData[activeTab].map((product) => (
+          <div
+            key={product.id}
+            className="product-card"
+            onClick={() => handleProductClick(product)}
+          >
+            <img
+              src={product.image}
+              alt={product.name}
+              className="product-image"
+            />
+            <h3 className="product-name">{product.name}</h3>
+          </div>
+        ))}
+      </div>
+      {selectedProduct && (
+        <ProductModal product={selectedProduct} onClose={closeModal} />
+      )}
+    </section>
+  );
+};
+
+// İletişim Bilgileri: Modern ikonlar kullanılarak telefon, e-posta ve çalışma saatlerini gösterir.
 const ContactInfo = () => (
   <div className="contact-info">
     <div className="contact-item">
@@ -87,15 +161,16 @@ const ContactInfo = () => (
 );
 
 function App() {
-  // Hangi bölümün aktif olduğunu tutan state
+  // Aktif bölümü takip etmek için state
   const [activeSection, setActiveSection] = useState("home");
 
+  // Intersection Observer kullanarak hangi bölümün görünür olduğunu tespit ediyoruz.
   useEffect(() => {
     const sections = document.querySelectorAll("section");
     const observerOptions = {
       root: null,
       rootMargin: "0px",
-      threshold: 0.6, // Bölümün %60'ı görünür olduğunda aktif kabul edilir
+      threshold: 0.6
     };
 
     const observerCallback = (entries) => {
@@ -109,7 +184,6 @@ function App() {
     const observer = new IntersectionObserver(observerCallback, observerOptions);
     sections.forEach((section) => observer.observe(section));
 
-    // Cleanup: observer'ı kaldırıyoruz
     return () => {
       sections.forEach((section) => observer.unobserve(section));
     };
@@ -123,10 +197,7 @@ function App() {
         Firmamız, uzun yıllara dayanan tecrübesi ve modern teknolojileri kullanarak
         kimya sektöründe öncü konumda bulunmaktadır.
       </Section>
-      <Section id="products" title="Ürünler">
-        Geniş ürün yelpazemizle, kalite ve güvenilirliği ön planda tutuyoruz.
-        Ürünlerimizi inceleyebilirsiniz.
-      </Section>
+      <ProductsSection />
       <Section id="offer" title="Teklif Al">
         İhtiyaçlarınıza özel teklifler almak için lütfen iletişim formumuzu doldurun.
       </Section>
@@ -139,6 +210,8 @@ function App() {
 }
 
 export default App;
+
+
 
 
 
